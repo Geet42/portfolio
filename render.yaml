@@ -24,4 +24,4 @@ services:
           name: portfolio-db
           property: password
       - key: FRONTEND_URL
-        value: https://geet-portfolio.vercel.app
+        value: https://geetbhute.vercel.app

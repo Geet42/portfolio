@@ -1,6 +1,6 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "https://portfolio-backend-5yxx.onrender.com/api",
-  timeout: 10000,
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080/api",
+  timeout: 30000,
 });

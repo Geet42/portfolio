@@ -103,7 +103,7 @@ export default function Projects() {
               borderRadius: "50%", animation: "float 0.8s linear infinite",
             }} />
             <p style={{ color: "var(--text-muted)", fontSize: 13, marginTop: 16 }}>
-              Fetching from <span style={{ fontFamily: "var(--mono)", color: "var(--accent)" }}>localhost:8080/api/projects</span>
+              Fetching from <span style={{ fontFamily: "var(--mono)", color: "var(--accent)" }}>Spring Boot API</span>
             </p>
           </div>
         )}
@@ -113,7 +113,7 @@ export default function Projects() {
             <span style={{ fontSize: 36, display: "block", marginBottom: 16 }}>&#9888;&#65039;</span>
             <p style={{ color: "var(--white)", fontWeight: 600, fontSize: 15, marginBottom: 8 }}>Backend API not reachable</p>
             <p style={{ color: "var(--text-muted)", fontSize: 13, marginBottom: 6 }}>
-              Could not connect to <span style={{ fontFamily: "var(--mono)", color: "var(--accent)" }}>http://localhost:8080/api/projects</span>
+              Could not connect to <span style={{ fontFamily: "var(--mono)", color: "var(--accent)" }}>/api/projects</span>
             </p>
             <p style={{ color: "var(--text-muted)", fontSize: 12, marginBottom: 24, lineHeight: 1.7 }}>
               This portfolio is powered by a Spring Boot backend. Start the backend:
