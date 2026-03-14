@@ -62,7 +62,7 @@ export default function Hero() {
       <div style={{ position: "absolute", top: "-30%", right: "-10%", width: 700, height: 700, borderRadius: "50%", background: "radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 70%)", pointerEvents: "none" }} />
       <div style={{ position: "absolute", bottom: "-20%", left: "-8%", width: 500, height: 500, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.04) 0%, transparent 70%)", pointerEvents: "none" }} />
 
-      <div className="section-container" style={{ width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center", paddingTop: 100, paddingBottom: 80, position: "relative", zIndex: 2 }}>
+      <div className="section-container grid-hero" style={{ width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center", paddingTop: 100, paddingBottom: 80, position: "relative", zIndex: 2 }}>
         <div className="animate-fade-up">
           {/* Badge */}
           <div style={{
@@ -75,17 +75,17 @@ export default function Hero() {
             <span style={{ fontSize: 11, fontWeight: 600, color: "var(--accent)", letterSpacing: "0.03em" }}>Open to Backend / SDE roles</span>
           </div>
 
-          <h1 style={{ fontSize: 62, fontWeight: 800, color: "var(--white)", lineHeight: 1.08, letterSpacing: "-0.04em", marginBottom: 14 }}>
+          <h1 className="hero-heading" style={{ fontSize: 62, fontWeight: 800, color: "var(--white)", lineHeight: 1.08, letterSpacing: "-0.04em", marginBottom: 14 }}>
             Geet<br />Bhute
           </h1>
-          <p style={{ fontSize: 21, fontWeight: 500, color: "var(--accent)", marginBottom: 16, letterSpacing: "-0.01em" }}>
+          <p className="hero-subtitle" style={{ fontSize: 21, fontWeight: 500, color: "var(--accent)", marginBottom: 16, letterSpacing: "-0.01em" }}>
             Backend Software Engineer
           </p>
           <p style={{ fontSize: 15.5, color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 430, marginBottom: 34 }}>
             Building resilient, scalable distributed systems with Java, Spring Boot & Cloud Infrastructure.
           </p>
 
-          <div style={{ display: "flex", gap: 12 }}>
+          <div className="hero-buttons" style={{ display: "flex", gap: 12 }}>
             <a href="#projects" style={{
               padding: "13px 28px", borderRadius: 12,
               background: "linear-gradient(135deg, #10b981, #059669)",
@@ -102,7 +102,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="animate-fade-up delay-200" style={{ display: "flex", justifyContent: "flex-end" }}>
+        <div className="animate-fade-up delay-200 hero-terminal" style={{ display: "flex", justifyContent: "flex-end" }}>
           <Terminal />
         </div>
       </div>

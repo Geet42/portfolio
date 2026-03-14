@@ -27,6 +27,7 @@ body {
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 ::selection { background: var(--accent); color: #000; }
 a { text-decoration: none; color: inherit; }
@@ -103,4 +104,175 @@ body::after {
   z-index: 9999;
   opacity: 0.015;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── Desktop nav links ─────────────── */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+/* ── Mobile hamburger button ───────── */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 110;
+}
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--white);
+  margin: 5px 0;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* ── Mobile menu overlay ───────────── */
+.mobile-menu {
+  display: none;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — Tablet (≤1024px)
+   ══════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .grid-hero {
+    grid-template-columns: 1fr !important;
+    gap: 48px !important;
+    text-align: center;
+  }
+  .grid-hero .hero-terminal {
+    justify-content: center !important;
+  }
+  .grid-about {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+  .grid-contact {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — Mobile (≤768px)
+   ══════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Nav: show hamburger, hide desktop links */
+  .hamburger {
+    display: block;
+  }
+  .nav-links {
+    display: none;
+  }
+
+  /* Mobile menu */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 105;
+    background: rgba(9, 9, 11, 0.97);
+    backdrop-filter: blur(20px);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+  }
+  .mobile-menu.open {
+    display: flex;
+  }
+  .mobile-menu a {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover {
+    color: var(--white);
+  }
+
+  /* Grids → single column on mobile */
+  .grid-3 {
+    grid-template-columns: 1fr !important;
+  }
+  .grid-hero {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+    padding-top: 80px !important;
+    padding-bottom: 40px !important;
+    text-align: center;
+  }
+  .grid-hero .hero-terminal {
+    justify-content: center !important;
+  }
+  .grid-about {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+  .grid-contact {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Section padding */
+  section {
+    padding: 80px 0 !important;
+  }
+
+  /* Hero heading */
+  .hero-heading {
+    font-size: 42px !important;
+  }
+  .hero-subtitle {
+    font-size: 17px !important;
+  }
+
+  /* Section headings */
+  .section-heading {
+    font-size: 30px !important;
+  }
+
+  /* Filter tabs wrap */
+  .filter-tabs {
+    gap: 6px !important;
+  }
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — Small mobile (≤480px)
+   ══════════════════════════════════════ */
+@media (max-width: 480px) {
+  .section-container {
+    padding: 0 16px;
+  }
+  .grid-contact {
+    grid-template-columns: 1fr !important;
+  }
+  .hero-heading {
+    font-size: 34px !important;
+  }
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  .hero-buttons a {
+    width: 100%;
+    text-align: center;
+  }
 }

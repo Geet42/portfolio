@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { api } from "../api";
 import ProjectCard from "./ProjectCard";
 
@@ -7,22 +7,44 @@ export default function Projects() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [filter, setFilter] = useState("all");
+  const [elapsed, setElapsed] = useState(0);
+  const timerRef = useRef(null);
+
+  const startTimer = () => {
+    setElapsed(0);
+    timerRef.current = setInterval(() => {
+      setElapsed(prev => prev + 1);
+    }, 1000);
+  };
+
+  const stopTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  };
 
   const fetchProjects = () => {
     setLoading(true);
     setError(false);
+    startTimer();
     api.get("/projects")
       .then(res => {
         setProjects(res.data);
         setLoading(false);
+        stopTimer();
       })
       .catch(() => {
         setError(true);
         setLoading(false);
+        stopTimer();
       });
   };
 
-  useEffect(() => { fetchProjects(); }, []);
+  useEffect(() => {
+    fetchProjects();
+    return () => stopTimer();
+  }, []);
 
   const matchFilter = (p) => {
     if (filter === "all") return true;
@@ -44,12 +66,15 @@ export default function Projects() {
     { key: "testing", label: "Testing" },
   ];
 
+  // Cold start message after 5 seconds
+  const showColdStartMsg = loading && elapsed >= 5;
+
   return (
     <section id="projects" style={{ padding: "120px 0", background: "rgba(255,255,255,0.008)" }}>
       <div className="section-container">
         <div style={{ marginBottom: 40 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
-            <h2 style={{ fontSize: 40, fontWeight: 800, color: "var(--white)", letterSpacing: "-0.03em" }}>Projects</h2>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10, flexWrap: "wrap" }}>
+            <h2 className="section-heading" style={{ fontSize: 40, fontWeight: 800, color: "var(--white)", letterSpacing: "-0.03em" }}>Projects</h2>
             {!loading && !error && (
               <span style={{
                 fontSize: 10, fontWeight: 600, padding: "4px 10px", borderRadius: 6,
@@ -75,7 +100,7 @@ export default function Projects() {
           )}
 
           {!loading && !error && projects.length > 0 && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            <div className="filter-tabs" style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               {filters.map(f => {
                 const count = f.key === "all" ? projects.length : projects.filter(p => matchFilter(p)).length;
                 return (
@@ -103,29 +128,30 @@ export default function Projects() {
               borderRadius: "50%", animation: "float 0.8s linear infinite",
             }} />
             <p style={{ color: "var(--text-muted)", fontSize: 13, marginTop: 16 }}>
-              Fetching from <span style={{ fontFamily: "var(--mono)", color: "var(--accent)" }}>Spring Boot API</span>
+              Waking up the backend server<span style={{ fontFamily: "var(--mono)", color: "var(--accent)" }}> {elapsed}s</span>
             </p>
+            {showColdStartMsg && (
+              <p style={{
+                color: "var(--text-muted)", fontSize: 12, marginTop: 10,
+                maxWidth: 380, margin: "10px auto 0",
+                lineHeight: 1.6, opacity: 0.7,
+              }}>
+                The backend is hosted on Render's free tier and sleeps after inactivity. Cold starts take up to 50 seconds — hang tight!
+              </p>
+            )}
           </div>
         )}
 
         {error && (
           <div className="card" style={{ padding: 40, textAlign: "center", maxWidth: 560, margin: "0 auto" }}>
             <span style={{ fontSize: 36, display: "block", marginBottom: 16 }}>&#9888;&#65039;</span>
-            <p style={{ color: "var(--white)", fontWeight: 600, fontSize: 15, marginBottom: 8 }}>Backend API not reachable</p>
+            <p style={{ color: "var(--white)", fontWeight: 600, fontSize: 15, marginBottom: 8 }}>Backend is still waking up</p>
             <p style={{ color: "var(--text-muted)", fontSize: 13, marginBottom: 6 }}>
-              Could not connect to <span style={{ fontFamily: "var(--mono)", color: "var(--accent)" }}>/api/projects</span>
+              The server is hosted on Render's free tier and may need a moment to start.
             </p>
             <p style={{ color: "var(--text-muted)", fontSize: 12, marginBottom: 24, lineHeight: 1.7 }}>
-              This portfolio is powered by a Spring Boot backend. Start the backend:
+              This usually takes 30–50 seconds on the first visit. Hit retry and it should load.
             </p>
-            <div style={{
-              fontFamily: "var(--mono)", fontSize: 12, color: "var(--accent)",
-              background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)",
-              padding: "12px 20px", borderRadius: 10, marginBottom: 24, display: "inline-block",
-            }}>
-              docker-compose up
-            </div>
-            <br />
             <button onClick={fetchProjects} style={{
               padding: "10px 24px", borderRadius: 10, cursor: "pointer",
               background: "linear-gradient(135deg, #10b981, #059669)",
@@ -136,7 +162,7 @@ export default function Projects() {
         )}
 
         {!loading && !error && filtered.length > 0 && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+          <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
             {filtered.map((p, i) => (
               <ProjectCard key={p.id || i} project={p} index={i} />
             ))}
@@ -154,6 +180,7 @@ export default function Projects() {
               padding: "8px 18px", borderRadius: 8,
               background: "rgba(255,255,255,0.02)", border: "1px solid var(--border)",
               fontSize: 11, color: "var(--text-muted)",
+              flexWrap: "wrap", justifyContent: "center",
             }}>
               <span style={{ fontWeight: 600, color: "var(--white)" }}>{projects.length}</span> projects
               <span style={{ width: 3, height: 3, borderRadius: "50%", background: "var(--text-muted)" }} />

@@ -12,11 +12,11 @@ export default function Skills() {
     <section id="skills" style={{ padding: "120px 0", background: "rgba(255,255,255,0.008)" }}>
       <div className="section-container">
         <div style={{ marginBottom: 56 }}>
-          <h2 style={{ fontSize: 40, fontWeight: 800, color: "var(--white)", letterSpacing: "-0.03em", marginBottom: 10 }}>Technical Skills</h2>
+          <h2 className="section-heading" style={{ fontSize: 40, fontWeight: 800, color: "var(--white)", letterSpacing: "-0.03em", marginBottom: 10 }}>Technical Skills</h2>
           <p style={{ fontSize: 15, color: "var(--text-muted)" }}>Core technologies I work with daily.</p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+        <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
           {Object.entries(skills).map(([name, { icon, items }], i) => (
             <div key={name} className="card animate-fade-up" style={{ padding: 26, animationDelay: `${i * 0.07}s` }}>
               <span style={{ fontSize: 28, display: "block", marginBottom: 14 }}>{icon}</span>

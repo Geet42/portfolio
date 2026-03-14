@@ -31,12 +31,12 @@ export default function About() {
     <section id="about" style={{ padding: "120px 0" }}>
       <div className="section-container">
         <div style={{ marginBottom: 56 }}>
-          <h2 style={{ fontSize: 40, fontWeight: 800, color: "var(--white)", letterSpacing: "-0.03em", marginBottom: 10 }}>About Me</h2>
+          <h2 className="section-heading" style={{ fontSize: 40, fontWeight: 800, color: "var(--white)", letterSpacing: "-0.03em", marginBottom: 10 }}>About Me</h2>
           <p style={{ fontSize: 15, color: "var(--text-muted)" }}>Backend-focused engineer with a systems-first mindset.</p>
         </div>
 
         {/* Bio + Education */}
-        <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 48, alignItems: "start", marginBottom: 56 }}>
+        <div className="grid-about" style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 48, alignItems: "start", marginBottom: 56 }}>
           <div>
             <p style={{ fontSize: 15, color: "var(--text)", lineHeight: 1.8, marginBottom: 20 }}>
               I'm a Computer Science master's student at University College Dublin with a deep interest in building fault-tolerant,
@@ -100,7 +100,7 @@ export default function About() {
         {/* Certifications */}
         <div style={{ marginBottom: 56 }}>
           <h3 style={{ fontSize: 20, fontWeight: 700, color: "var(--white)", marginBottom: 20 }}>Certifications</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
+          <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
             {certifications.map((c, i) => (
               <div key={i} className="card" style={{ padding: "14px 18px", display: "flex", alignItems: "center", gap: 12 }}>
                 <span style={{ width: 8, height: 8, borderRadius: "50%", background: c.color, flexShrink: 0 }} />
@@ -116,7 +116,7 @@ export default function About() {
         {/* Beyond Academics */}
         <div>
           <h3 style={{ fontSize: 20, fontWeight: 700, color: "var(--white)", marginBottom: 20 }}>Beyond Academics</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+          <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
             <div className="card" style={{ padding: 24 }}>
               <span style={{ fontSize: 28, display: "block", marginBottom: 12 }}>🏏</span>
               <h4 style={{ color: "var(--white)", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Cricket</h4>

@@ -18,16 +18,22 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
+
   return (
     <nav style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-      background: scrolled ? "rgba(9,9,11,0.88)" : "transparent",
-      backdropFilter: scrolled ? "blur(20px) saturate(180%)" : "none",
+      background: scrolled || open ? "rgba(9,9,11,0.88)" : "transparent",
+      backdropFilter: scrolled || open ? "blur(20px) saturate(180%)" : "none",
       borderBottom: scrolled ? "1px solid var(--border)" : "1px solid transparent",
       transition: "all 0.35s ease",
     }}>
       <div className="section-container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
-        <a href="#hero" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <a href="#hero" style={{ display: "flex", alignItems: "center", gap: 10, zIndex: 110 }}>
           <span style={{
             width: 34, height: 34, borderRadius: 10,
             background: "linear-gradient(135deg, #10b981, #059669)",
@@ -39,7 +45,8 @@ export default function Navbar() {
           </span>
         </a>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
+        {/* Desktop nav */}
+        <div className="nav-links">
           {links.map(l => (
             <a key={l.id} href={`#${l.id}`} style={{
               fontSize: 13, fontWeight: 500, color: "var(--text-muted)",
@@ -57,6 +64,41 @@ export default function Navbar() {
             transition: "all 0.2s",
           }}>GitHub ↗</a>
         </div>
+
+        {/* Hamburger button */}
+        <button
+          className={`hamburger ${open ? "active" : ""}`}
+          onClick={() => setOpen(!open)}
+          aria-label="Toggle menu"
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+      </div>
+
+      {/* Mobile menu overlay */}
+      <div className={`mobile-menu ${open ? "open" : ""}`}>
+        {links.map(l => (
+          <a key={l.id} href={`#${l.id}`} onClick={() => setOpen(false)}>
+            {l.label}
+          </a>
+        ))}
+        <a
+          href="https://github.com/Geet42"
+          target="_blank"
+          rel="noreferrer"
+          style={{
+            fontSize: 14, fontWeight: 600, color: "var(--accent)",
+            padding: "10px 24px", borderRadius: 10,
+            border: "1px solid rgba(16,185,129,0.25)",
+            background: "rgba(16,185,129,0.06)",
+            marginTop: 8,
+          }}
+          onClick={() => setOpen(false)}
+        >
+          GitHub ↗
+        </a>
       </div>
     </nav>
   );
