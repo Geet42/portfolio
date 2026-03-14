@@ -1,0 +1,63 @@
+import { useState, useEffect } from "react";
+
+const links = [
+  { id: "about", label: "About" },
+  { id: "skills", label: "Skills" },
+  { id: "experience", label: "Experience" },
+  { id: "projects", label: "Projects" },
+  { id: "contact", label: "Contact" },
+];
+
+export default function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const fn = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", fn);
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
+
+  return (
+    <nav style={{
+      position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
+      background: scrolled ? "rgba(9,9,11,0.88)" : "transparent",
+      backdropFilter: scrolled ? "blur(20px) saturate(180%)" : "none",
+      borderBottom: scrolled ? "1px solid var(--border)" : "1px solid transparent",
+      transition: "all 0.35s ease",
+    }}>
+      <div className="section-container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
+        <a href="#hero" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{
+            width: 34, height: 34, borderRadius: 10,
+            background: "linear-gradient(135deg, #10b981, #059669)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            color: "#fff", fontWeight: 800, fontSize: 15,
+          }}>G</span>
+          <span style={{ color: "var(--white)", fontWeight: 700, fontSize: 15, letterSpacing: "-0.02em" }}>
+            Geet Bhute
+          </span>
+        </a>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
+          {links.map(l => (
+            <a key={l.id} href={`#${l.id}`} style={{
+              fontSize: 13, fontWeight: 500, color: "var(--text-muted)",
+              transition: "color 0.2s", letterSpacing: "0.01em",
+            }}
+            onMouseEnter={e => e.target.style.color = "var(--white)"}
+            onMouseLeave={e => e.target.style.color = "var(--text-muted)"}
+            >{l.label}</a>
+          ))}
+          <a href="https://github.com/Geet42" target="_blank" rel="noreferrer" style={{
+            fontSize: 12, fontWeight: 600, color: "var(--accent)",
+            padding: "7px 16px", borderRadius: 8,
+            border: "1px solid rgba(16,185,129,0.25)",
+            background: "rgba(16,185,129,0.06)",
+            transition: "all 0.2s",
+          }}>GitHub ↗</a>
+        </div>
+      </div>
+    </nav>
+  );
+}
