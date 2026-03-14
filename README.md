@@ -2,7 +2,7 @@
 
 A full-stack developer portfolio built with **Spring Boot**, **React**, **PostgreSQL**, and **Docker** — deployed live with a real backend API serving project data from a relational database.
 
-> **Live:** [geet-portfolio.vercel.app](https://geet-portfolio.vercel.app) · **API:** [portfolio-backend.onrender.com/api/projects](https://portfolio-backend.onrender.com/api/projects)
+> **Live:** [geetbhute.vercel.app](https://geetbhute.vercel.app) · **API:** [portfolio-backend-5yxx.onrender.com/api/projects](https://portfolio-backend-5yxx.onrender.com/api/projects)
 
 ---
 
@@ -82,7 +82,7 @@ A full-stack developer portfolio built with **Spring Boot**, **React**, **Postgr
 ## Project Structure
 
 ```
-WebsiteGeet/
+portfolio/
 ├── frontend/                          # React Frontend (Vite)
 │   ├── src/
 │   │   ├── components/
@@ -105,7 +105,6 @@ WebsiteGeet/
 │   ├── vite.config.js                 # Vite configuration
 │   ├── tailwind.config.js             # Tailwind configuration
 │   ├── postcss.config.js              # PostCSS plugins
-│   ├── vercel.json                    # Vercel deployment config
 │   ├── .env.production                # Production API URL
 │   └── Dockerfile                     # Frontend container (for Docker Compose)
 │
@@ -113,7 +112,7 @@ WebsiteGeet/
 │   ├── src/main/java/com/geet/portfolio/
 │   │   ├── PortfolioApplication.java  # Spring Boot entry point
 │   │   ├── config/
-│   │   │   ├── CorsConfig.java        # CORS policy (localhost + Vercel)
+│   │   │   ├── CorsConfig.java        # CORS policy (localhost + Vercel + preview domains)
 │   │   │   └── DataLoader.java        # Seeds 11 projects on first startup
 │   │   ├── controller/
 │   │   │   ├── ProjectApiController.java   # GET /api/projects, POST, DELETE
@@ -200,7 +199,7 @@ CREATE TABLE project_tech_stack (
 - **JWT Filter** (`JwtFilter.java`): Custom `OncePerRequestFilter` that validates `Bearer` tokens on protected endpoints
 - **Public Endpoints**: `GET /api/projects`, `/actuator/health`, Swagger UI, static assets
 - **Protected Endpoints**: All `POST`/`DELETE` operations require `X-ADMIN-TOKEN` or JWT `Authorization` header
-- **CORS**: Configured to allow requests from `localhost:5173` (dev) and the production Vercel URL (env variable `FRONTEND_URL`)
+- **CORS**: Configured to allow requests from `localhost:5173` (dev), the production Vercel URL, and Vercel preview deployment patterns
 - **Stateless Sessions**: `SessionCreationPolicy.STATELESS` — no server-side session storage
 
 ### Data Seeding
@@ -244,7 +243,7 @@ CREATE TABLE project_tech_stack (
 
 ```javascript
 // frontend/src/api.js
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+const baseURL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 ```
 
 - **Local dev**: Falls back to `localhost:8080` (Docker backend)
