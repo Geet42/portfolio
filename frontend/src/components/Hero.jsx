@@ -76,7 +76,7 @@ export default function Hero() {
           </div>
 
           {/* Name + Avatar row */}
-          <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 14 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 32, marginBottom: 14 }}>
             <h1 className="hero-heading" style={{ fontSize: 62, fontWeight: 800, color: "var(--white)", lineHeight: 1.08, letterSpacing: "-0.04em" }}>
               Geet<br />Bhute
             </h1>
@@ -85,7 +85,7 @@ export default function Hero() {
               alt="Geet Bhute"
               className="hero-avatar"
               style={{
-                width: 120, height: 120,
+                width: 180, height: 180,
                 objectFit: "contain",
                 filter: "drop-shadow(0 8px 24px rgba(16,185,129,0.15))",
                 animation: "float 7s ease-in-out infinite",
