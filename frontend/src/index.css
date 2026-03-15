@@ -242,6 +242,10 @@ body::after {
   .hero-subtitle {
     font-size: 17px !important;
   }
+  .hero-avatar {
+    width: 100px !important;
+    height: 100px !important;
+  }
 
   /* Section headings */
   .section-heading {
@@ -266,6 +270,10 @@ body::after {
   }
   .hero-heading {
     font-size: 34px !important;
+  }
+  .hero-avatar {
+    width: 80px !important;
+    height: 80px !important;
   }
   .hero-buttons {
     flex-direction: column;

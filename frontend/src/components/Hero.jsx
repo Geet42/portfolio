@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
 const termLines = [
-  { cmd: "$ whoami", out: "geet.bhute — backend engineer" },
+  { cmd: "$ whoami", out: "geet.bhute — software developer" },
   { cmd: "$ cat stack.txt", out: "Java · Spring Boot · Docker · K8s · AWS" },
   { cmd: "$ uptime", out: "3+ years building distributed systems" },
   { cmd: "$ location", out: "Dublin, Ireland 🇮🇪" },
@@ -72,14 +72,29 @@ export default function Hero() {
             marginBottom: 28,
           }}>
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--accent)", animation: "pulse-dot 2s infinite" }} />
-            <span style={{ fontSize: 11, fontWeight: 600, color: "var(--accent)", letterSpacing: "0.03em" }}>Open to Backend / SDE roles</span>
+            <span style={{ fontSize: 11, fontWeight: 600, color: "var(--accent)", letterSpacing: "0.03em" }}>Open to SDE roles</span>
           </div>
 
-          <h1 className="hero-heading" style={{ fontSize: 62, fontWeight: 800, color: "var(--white)", lineHeight: 1.08, letterSpacing: "-0.04em", marginBottom: 14 }}>
-            Geet<br />Bhute
-          </h1>
+          {/* Name + Avatar row */}
+          <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 14 }}>
+            <h1 className="hero-heading" style={{ fontSize: 62, fontWeight: 800, color: "var(--white)", lineHeight: 1.08, letterSpacing: "-0.04em" }}>
+              Geet<br />Bhute
+            </h1>
+            <img
+              src="/avatar.png"
+              alt="Geet Bhute"
+              className="hero-avatar"
+              style={{
+                width: 120, height: 120,
+                objectFit: "contain",
+                filter: "drop-shadow(0 8px 24px rgba(16,185,129,0.15))",
+                animation: "float 7s ease-in-out infinite",
+              }}
+            />
+          </div>
+
           <p className="hero-subtitle" style={{ fontSize: 21, fontWeight: 500, color: "var(--accent)", marginBottom: 16, letterSpacing: "-0.01em" }}>
-             Software Engineer
+            Software Developer
           </p>
           <p style={{ fontSize: 15.5, color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 430, marginBottom: 34 }}>
             Building resilient, scalable distributed systems with Java, Spring Boot & Cloud Infrastructure.
