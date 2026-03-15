@@ -79,7 +79,7 @@ export default function Hero() {
             Geet<br />Bhute
           </h1>
           <p className="hero-subtitle" style={{ fontSize: 21, fontWeight: 500, color: "var(--accent)", marginBottom: 16, letterSpacing: "-0.01em" }}>
-            Backend Software Engineer
+             Software Engineer
           </p>
           <p style={{ fontSize: 15.5, color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 430, marginBottom: 34 }}>
             Building resilient, scalable distributed systems with Java, Spring Boot & Cloud Infrastructure.

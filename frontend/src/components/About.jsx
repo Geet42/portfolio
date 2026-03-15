@@ -32,7 +32,7 @@ export default function About() {
       <div className="section-container">
         <div style={{ marginBottom: 56 }}>
           <h2 className="section-heading" style={{ fontSize: 40, fontWeight: 800, color: "var(--white)", letterSpacing: "-0.03em", marginBottom: 10 }}>About Me</h2>
-          <p style={{ fontSize: 15, color: "var(--text-muted)" }}>Backend-focused engineer with a systems-first mindset.</p>
+          <p style={{ fontSize: 15, color: "var(--text-muted)" }}>Software engineer with a systems-first mindset.</p>
         </div>
 
         {/* Bio + Education */}
