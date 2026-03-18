@@ -23,11 +23,11 @@ const certifications = [
 ];
 
 const leetcode = {
-  solved: 132,
-  easy: 69,
-  medium: 56,
-  hard: 7,
-  submissions: 119,
+  solved: 150+,
+  easy: 77,
+  medium: 64,
+  hard: 10,
+  submissions: 168,
   url: "https://leetcode.com/u/bhutegp/",
 };
 
