@@ -1,10 +1,10 @@
 const skills = {
-  "Languages":      { icon: "⌨️", items: ["Java", "Python", "C", "SQL"] },
-  "Backend":        { icon: "⚙️", items: ["Spring Boot", "Microservices", "REST APIs", "Flask", "Spring Security"] },
-  "Cloud & DevOps": { icon: "☁️", items: ["AWS", "Docker", "Kubernetes", "CI/CD", "GitHub Actions"] },
-  "Databases":      { icon: "🗄️", items: ["PostgreSQL", "MySQL"] },
-  "Tools":          { icon: "🔧", items: ["Git", "Postman", "Swagger", "IntelliJ", "VS Code", "Kafka"] },
-  "Concepts":       { icon: "🧠", items: ["DSA", "OOP", "System Design", "Distributed Systems", "Fault Tolerance"] },
+  "Languages":          { icon: "⌨️", items: ["Java", "Python", "C", "SQL", "JavaScript", "HTML/CSS"] },
+  "Backend":            { icon: "⚙️", items: ["Spring Boot", "REST APIs", "Microservices", "Flask", "Spring Security", "Hibernate"] },
+  "Frontend":           { icon: "🎨", items: ["React", "Tailwind CSS", "Vite", "Axios", "Responsive Design"] },
+  "Cloud & DevOps":     { icon: "☁️", items: ["Docker", "Kubernetes", "AWS", "GitHub Actions", "CI/CD", "Linux"] },
+  "Databases":          { icon: "🗄️", items: ["PostgreSQL", "MySQL", "MongoDB", "JPA", "SQL Programming"] },
+  "CS Fundamentals":    { icon: "🧠", items: ["DSA", "OOP", "System Design", "OS", "Computer Networks", "DBMS", "Software Engineering"] },
 };
 
 export default function Skills() {
@@ -13,7 +13,7 @@ export default function Skills() {
       <div className="section-container">
         <div style={{ marginBottom: 56 }}>
           <h2 className="section-heading" style={{ fontSize: 40, fontWeight: 800, color: "var(--white)", letterSpacing: "-0.03em", marginBottom: 10 }}>Technical Skills</h2>
-          <p style={{ fontSize: 15, color: "var(--text-muted)" }}>Core technologies I work with daily.</p>
+          <p style={{ fontSize: 15, color: "var(--text-muted)" }}>Core technologies and fundamentals I work with.</p>
         </div>
 
         <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>

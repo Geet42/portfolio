@@ -120,7 +120,8 @@ body::after {
   border: none;
   cursor: pointer;
   padding: 8px;
-  z-index: 110;
+  z-index: 210;
+  position: relative;
 }
 .hamburger span {
   display: block;
@@ -179,32 +180,38 @@ body::after {
     display: block;
   }
   .nav-links {
-    display: none;
+    display: none !important;
   }
 
-  /* Mobile menu */
+  /* Mobile menu — fullscreen overlay */
   .mobile-menu {
     display: none;
     position: fixed;
-    inset: 0;
-    z-index: 105;
-    background: rgba(9, 9, 11, 0.97);
-    backdrop-filter: blur(20px);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 200;
+    background: rgba(9, 9, 11, 0.98);
+    backdrop-filter: blur(24px);
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 28px;
+    gap: 32px;
+    padding: 80px 24px 40px;
   }
   .mobile-menu.open {
     display: flex;
   }
   .mobile-menu a {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
     color: var(--text-muted);
     transition: color 0.2s;
+    padding: 8px 0;
   }
-  .mobile-menu a:hover {
+  .mobile-menu a:hover,
+  .mobile-menu a:active {
     color: var(--white);
   }
 

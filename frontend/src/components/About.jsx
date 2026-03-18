@@ -1,13 +1,18 @@
 const education = [
-  { school: "University College Dublin", degree: "MSc Computer Science (Negotiated Learning)", grade: "2:1", period: "Sep 2025 – Present" },
-  { school: "Shri Ramdeobaba College of Engineering", degree: "B.Tech Computer Science", grade: "1:1", period: "Dec 2021 – May 2025" },
+  {
+    school: "University College Dublin", degree: "MSc Computer Science (Negotiated Learning)", grade: "2:1", period: "Sep 2025 – Present",
+    modules: ["Java", "Cloud Computing", "Distributed Systems", "Machine Learning", "Data Mining", "Deep Learning", "Advanced Data Structures", "Generative AI: Language Models", "Intro to Relational Databases & SQL"],
+  },
+  {
+    school: "Shri Ramdeobaba College of Engineering", degree: "B.Tech Computer Science", grade: "1:1", period: "Dec 2021 – May 2025",
+    modules: ["C Programming", "Data Structures", "OOP in Java", "DSA", "AI", "DBMS", "Machine Learning", "Operating Systems", "Cloud Computing", "Computer Networks", "Design & Analysis of Algorithms", "Computer Architecture", "Software Engineering", "Data Warehousing & Mining", "Computer Graphics", "Compiler Design"],
+  },
 ];
 
 const certifications = [
   { name: "Spring Boot 1 to 100 – Expert", issuer: "Coding Shuttle", color: "#ec4899" },
   { name: "Spring Boot 0 to 1 – Fundamentals", issuer: "Coding Shuttle", color: "#ec4899" },
   { name: "Java", issuer: "Udemy", color: "#8b5cf6" },
-  { name: "AWS Cloud Practitioner", issuer: "AWS", color: "#f59e0b" },
   { name: "Data Storage in Microsoft Azure", issuer: "Microsoft", color: "#3b82f6" },
   { name: "Azure Management & Security Solutions", issuer: "Microsoft", color: "#3b82f6" },
   { name: "Intro to Azure Cloud Services", issuer: "Microsoft", color: "#3b82f6" },
@@ -51,13 +56,26 @@ export default function About() {
 
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             {education.map((e, i) => (
-              <div key={i} className="card" style={{ padding: 20, display: "flex", gap: 14 }}>
-                <span style={{ fontSize: 22 }}>🎓</span>
-                <div>
-                  <p style={{ color: "var(--white)", fontWeight: 600, fontSize: 14, marginBottom: 3 }}>{e.school}</p>
-                  <p style={{ fontSize: 13, color: "var(--text)", marginBottom: 2 }}>{e.degree}</p>
-                  <p style={{ fontSize: 11, color: "var(--text-muted)" }}>{e.grade} · {e.period}</p>
+              <div key={i} className="card" style={{ padding: 20 }}>
+                <div style={{ display: "flex", gap: 14, marginBottom: e.modules ? 12 : 0 }}>
+                  <span style={{ fontSize: 22 }}>🎓</span>
+                  <div>
+                    <p style={{ color: "var(--white)", fontWeight: 600, fontSize: 14, marginBottom: 3 }}>{e.school}</p>
+                    <p style={{ fontSize: 13, color: "var(--text)", marginBottom: 2 }}>{e.degree}</p>
+                    <p style={{ fontSize: 11, color: "var(--text-muted)" }}>{e.grade} · {e.period}</p>
+                  </div>
                 </div>
+                {e.modules && (
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 4, paddingLeft: 36 }}>
+                    {e.modules.map(m => (
+                      <span key={m} style={{
+                        fontSize: 9.5, fontWeight: 500, padding: "2px 8px", borderRadius: 5,
+                        background: "rgba(255,255,255,0.04)", border: "1px solid var(--border)",
+                        color: "var(--text-muted)",
+                      }}>{m}</span>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
 

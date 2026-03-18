@@ -30,7 +30,7 @@ export default function ProjectCard({ project, index }) {
         <h3 style={{ fontSize: 14.5, fontWeight: 700, color: "var(--white)", lineHeight: 1.35, marginBottom: 10, letterSpacing: "-0.01em" }}>
           {project.title}
         </h3>
-        <p style={{ fontSize: 12.5, color: "var(--text-muted)", lineHeight: 1.65, marginBottom: 16, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+        <p style={{ fontSize: 12.5, color: "var(--text-muted)", lineHeight: 1.65, marginBottom: 16 }}>
           {project.description}
         </p>
 
