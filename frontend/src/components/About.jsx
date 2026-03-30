@@ -213,7 +213,7 @@ export default function About() {
             {[
               { emoji: "🏏", title: "Cricket", text: "Represented school and college in intercollegiate tournaments. Secured runner-up positions at Dhanwate National College and Sindhu Mahavidyalaya competitions." },
               { emoji: "🤝", title: "Rotaract Club – RCOEM", text: "Distributed essentials to underprivileged families, organized awareness campaigns, and hosted events for differently-abled children through social initiatives." },
-              { emoji: "💻", title: "Competitive Programming", text: "132 LeetCode problems solved (Java). Active competitive programmer focused on data structures, algorithms, and problem-solving under constraints." },
+              { emoji: "💻", title: "Competitive Programming", text: `${leetcode.solved}+ LeetCode problems solved (Java). Active competitive programmer focused on data structures, algorithms, and problem-solving under constraints.` },
             ].map((item, i) => (
               <div
                 key={i}
