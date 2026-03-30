@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { api } from "../api";
 import ProjectCard from "./ProjectCard";
+import useInView from "../hooks/useInView";
 
 export default function Projects() {
   const [projects, setProjects] = useState([]);
@@ -9,6 +10,10 @@ export default function Projects() {
   const [filter, setFilter] = useState("all");
   const [elapsed, setElapsed] = useState(0);
   const timerRef = useRef(null);
+  const [animKey, setAnimKey] = useState(0); // re-trigger animations on filter change
+
+  const [headingRef, headingVisible] = useInView({ threshold: 0.2 });
+  const [gridRef, gridVisible] = useInView({ threshold: 0.05 });
 
   const startTimer = () => {
     setElapsed(0);
@@ -56,6 +61,11 @@ export default function Projects() {
     return true;
   };
 
+  const handleFilter = (key) => {
+    setFilter(key);
+    setAnimKey(prev => prev + 1); // re-trigger card animations
+  };
+
   const filtered = projects.filter(matchFilter);
 
   const filters = [
@@ -72,28 +82,41 @@ export default function Projects() {
   return (
     <section id="projects" style={{ padding: "120px 0", background: "rgba(255,255,255,0.008)" }}>
       <div className="section-container">
-        <div style={{ marginBottom: 40 }}>
+        <div ref={headingRef} style={{ marginBottom: 40 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10, flexWrap: "wrap" }}>
-            <h2 className="section-heading" style={{ fontSize: 40, fontWeight: 800, color: "var(--white)", letterSpacing: "-0.03em" }}>Projects</h2>
+            <h2
+              className={`section-heading ${headingVisible ? "anim-blur-in" : "anim-hidden"}`}
+              style={{ fontSize: 40, fontWeight: 800, color: "var(--white)", letterSpacing: "-0.03em" }}
+            >Projects</h2>
             {!loading && !error && (
-              <span style={{
-                fontSize: 10, fontWeight: 600, padding: "4px 10px", borderRadius: 6,
-                background: "var(--accent-dim)", border: "1px solid rgba(16,185,129,0.2)",
-                color: "var(--accent)", letterSpacing: "0.05em",
-              }}>LIVE FROM API</span>
+              <span
+                className={headingVisible ? "anim-fade-up" : "anim-hidden"}
+                style={{
+                  fontSize: 10, fontWeight: 600, padding: "4px 10px", borderRadius: 6,
+                  background: "var(--accent-dim)", border: "1px solid rgba(16,185,129,0.2)",
+                  color: "var(--accent)", letterSpacing: "0.05em", animationDelay: "0.2s",
+                }}
+              >LIVE FROM API</span>
             )}
           </div>
-          <p style={{ fontSize: 15, color: "var(--text-muted)", marginBottom: 28 }}>
+          <p
+            className={headingVisible ? "anim-fade-up" : "anim-hidden"}
+            style={{ fontSize: 15, color: "var(--text-muted)", marginBottom: 28, animationDelay: "0.15s" }}
+          >
             Fetched in real-time from the Spring Boot REST API backed by PostgreSQL.
           </p>
 
           {!loading && !error && (
-            <div style={{
-              display: "inline-flex", alignItems: "center", gap: 8,
-              padding: "6px 14px", borderRadius: 8, marginBottom: 24,
-              background: "rgba(255,255,255,0.02)", border: "1px solid var(--border)",
-              fontFamily: "var(--mono)", fontSize: 11, color: "var(--text-muted)",
-            }}>
+            <div
+              className={headingVisible ? "anim-fade-up" : "anim-hidden"}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 8,
+                padding: "6px 14px", borderRadius: 8, marginBottom: 24,
+                background: "rgba(255,255,255,0.02)", border: "1px solid var(--border)",
+                fontFamily: "var(--mono)", fontSize: 11, color: "var(--text-muted)",
+                animationDelay: "0.25s",
+              }}
+            >
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--accent)" }} />
               GET /api/projects &rarr; {projects.length} results
             </div>
@@ -101,16 +124,30 @@ export default function Projects() {
 
           {!loading && !error && projects.length > 0 && (
             <div className="filter-tabs" style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {filters.map(f => {
-                const count = f.key === "all" ? projects.length : projects.filter(p => matchFilter(p)).length;
+              {filters.map((f, fi) => {
+                const count = f.key === "all" ? projects.length : projects.filter(p => {
+                  // Re-use matchFilter logic with temporarily set filter
+                  const text = `${p.title} ${p.description} ${(p.techStack || []).join(" ")}`.toLowerCase();
+                  if (f.key === "distributed") return text.includes("distributed") || text.includes("microservice") || text.includes("resilience") || text.includes("circuit") || text.includes("grpc") || text.includes("socket") || text.includes("replication");
+                  if (f.key === "ml") return text.includes("learning") || text.includes("nlp") || text.includes("bert") || text.includes("cnn") || text.includes("tensorflow") || text.includes("prediction") || text.includes("xgboost");
+                  if (f.key === "cloud") return text.includes("docker") || text.includes("cloud") || text.includes("kubernetes") || text.includes("flask") || text.includes("fastapi");
+                  if (f.key === "testing") return text.includes("junit") || text.includes("testing") || text.includes("evaluation") || text.includes("test");
+                  return true;
+                }).length;
                 return (
-                  <button key={f.key} onClick={() => setFilter(f.key)} style={{
-                    fontSize: 12, fontWeight: 600, padding: "7px 16px", borderRadius: 8, cursor: "pointer",
-                    border: filter === f.key ? "1px solid rgba(16,185,129,0.3)" : "1px solid var(--border)",
-                    background: filter === f.key ? "var(--accent-dim)" : "transparent",
-                    color: filter === f.key ? "var(--accent)" : "var(--text-muted)",
-                    transition: "all 0.2s",
-                  }}>
+                  <button
+                    key={f.key}
+                    onClick={() => handleFilter(f.key)}
+                    className={headingVisible ? "anim-fade-up" : "anim-hidden"}
+                    style={{
+                      fontSize: 12, fontWeight: 600, padding: "7px 16px", borderRadius: 8, cursor: "pointer",
+                      border: filter === f.key ? "1px solid rgba(16,185,129,0.3)" : "1px solid var(--border)",
+                      background: filter === f.key ? "var(--accent-dim)" : "transparent",
+                      color: filter === f.key ? "var(--accent)" : "var(--text-muted)",
+                      transition: "all 0.2s",
+                      animationDelay: `${0.3 + fi * 0.06}s`,
+                    }}
+                  >
                     {f.label}
                     <span style={{ marginLeft: 6, opacity: 0.5, fontSize: 10 }}>{count}</span>
                   </button>
@@ -125,7 +162,7 @@ export default function Projects() {
             <div style={{
               display: "inline-block", width: 36, height: 36,
               border: "3px solid rgba(16,185,129,0.15)", borderTopColor: "var(--accent)",
-              borderRadius: "50%", animation: "float 0.8s linear infinite",
+              borderRadius: "50%", animation: "spin 0.8s linear infinite",
             }} />
             <p style={{ color: "var(--text-muted)", fontSize: 13, marginTop: 16 }}>
               Waking up the backend server<span style={{ fontFamily: "var(--mono)", color: "var(--accent)" }}> {elapsed}s</span>
@@ -162,9 +199,15 @@ export default function Projects() {
         )}
 
         {!loading && !error && filtered.length > 0 && (
-          <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+          <div ref={gridRef} key={animKey} className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
             {filtered.map((p, i) => (
-              <ProjectCard key={p.id || i} project={p} index={i} />
+              <div
+                key={p.id || i}
+                className={gridVisible ? "anim-scale-in" : "anim-hidden"}
+                style={{ animationDelay: `${i * 0.07}s` }}
+              >
+                <ProjectCard project={p} index={i} />
+              </div>
             ))}
           </div>
         )}
@@ -174,7 +217,10 @@ export default function Projects() {
         )}
 
         {!loading && !error && (
-          <div style={{ textAlign: "center", marginTop: 32 }}>
+          <div
+            className={gridVisible ? "anim-fade-up" : "anim-hidden"}
+            style={{ textAlign: "center", marginTop: 32, animationDelay: "0.5s" }}
+          >
             <div style={{
               display: "inline-flex", alignItems: "center", gap: 10,
               padding: "8px 18px", borderRadius: 8,

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const links = [
   { id: "about", label: "About" },
@@ -11,11 +11,42 @@ const links = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  // Slide-down entrance
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 100);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", fn);
     return () => window.removeEventListener("scroll", fn);
+  }, []);
+
+  // Active section scroll spy
+  useEffect(() => {
+    const sectionIds = ["hero", ...links.map(l => l.id)];
+    const observers = [];
+
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setActiveSection(id === "hero" ? "" : id);
+          }
+        },
+        { threshold: 0.3, rootMargin: "-80px 0px -40% 0px" }
+      );
+      observer.observe(el);
+      observers.push(observer);
+    });
+
+    return () => observers.forEach(o => o.disconnect());
   }, []);
 
   // Lock body scroll when mobile menu is open
@@ -31,6 +62,8 @@ export default function Navbar() {
       backdropFilter: scrolled || open ? "blur(20px) saturate(180%)" : "none",
       borderBottom: scrolled ? "1px solid var(--border)" : "1px solid transparent",
       transition: "all 0.35s ease",
+      transform: mounted ? "translateY(0)" : "translateY(-100%)",
+      opacity: mounted ? 1 : 0,
     }}>
       <div className="section-container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
         <a href="#hero" style={{ display: "flex", alignItems: "center", gap: 10, zIndex: 110 }}>
@@ -48,12 +81,16 @@ export default function Navbar() {
         {/* Desktop nav */}
         <div className="nav-links">
           {links.map(l => (
-            <a key={l.id} href={`#${l.id}`} style={{
-              fontSize: 13, fontWeight: 500, color: "var(--text-muted)",
-              transition: "color 0.2s", letterSpacing: "0.01em",
-            }}
-            onMouseEnter={e => e.target.style.color = "var(--white)"}
-            onMouseLeave={e => e.target.style.color = "var(--text-muted)"}
+            <a key={l.id} href={`#${l.id}`}
+              className={activeSection === l.id ? "nav-link-active" : ""}
+              style={{
+                fontSize: 13, fontWeight: 500,
+                color: activeSection === l.id ? "var(--accent)" : "var(--text-muted)",
+                transition: "color 0.3s ease", letterSpacing: "0.01em",
+                position: "relative",
+              }}
+              onMouseEnter={e => { if (activeSection !== l.id) e.target.style.color = "var(--white)"; }}
+              onMouseLeave={e => { if (activeSection !== l.id) e.target.style.color = "var(--text-muted)"; }}
             >{l.label}</a>
           ))}
           <a href="https://github.com/Geet42" target="_blank" rel="noreferrer" style={{

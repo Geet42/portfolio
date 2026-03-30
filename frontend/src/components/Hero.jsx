@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 const termLines = [
   { cmd: "$ whoami", out: "geet.bhute — software developer" },
@@ -55,17 +55,99 @@ function Terminal() {
   );
 }
 
+/* Floating particles for hero background */
+function HeroParticles() {
+  const particles = Array.from({ length: 20 }, (_, i) => ({
+    id: i,
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
+    size: 2 + Math.random() * 4,
+    duration: 6 + Math.random() * 8,
+    delay: Math.random() * 5,
+    opacity: 0.15 + Math.random() * 0.25,
+  }));
+
+  return (
+    <div className="hero-particles">
+      {particles.map(p => (
+        <span
+          key={p.id}
+          className="hero-particle"
+          style={{
+            left: p.left,
+            top: p.top,
+            width: p.size,
+            height: p.size,
+            "--duration": `${p.duration}s`,
+            "--delay": `${p.delay}s`,
+            opacity: p.opacity,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* Magnetic hover effect for buttons */
+function MagneticButton({ children, href, style, className = "" }) {
+  const ref = useRef(null);
+
+  const handleMove = useCallback((e) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    el.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+  }, []);
+
+  const handleLeave = useCallback(() => {
+    const el = ref.current;
+    if (el) el.style.transform = "translate(0, 0)";
+  }, []);
+
+  return (
+    <a
+      ref={ref}
+      href={href}
+      className={`btn-magnetic ${className}`}
+      style={style}
+      onMouseMove={handleMove}
+      onMouseLeave={handleLeave}
+    >
+      {children}
+    </a>
+  );
+}
+
 export default function Hero() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 200);
+    return () => clearTimeout(t);
+  }, []);
+
+  const stagger = (delay) => ({
+    opacity: mounted ? 1 : 0,
+    transform: mounted ? "translateY(0)" : "translateY(30px)",
+    transition: `all 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
+  });
+
   return (
     <section id="hero" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden" }}>
+      {/* Floating particles */}
+      <HeroParticles />
+
       {/* Background glows */}
       <div style={{ position: "absolute", top: "-30%", right: "-10%", width: 700, height: 700, borderRadius: "50%", background: "radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 70%)", pointerEvents: "none" }} />
       <div style={{ position: "absolute", bottom: "-20%", left: "-8%", width: 500, height: 500, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.04) 0%, transparent 70%)", pointerEvents: "none" }} />
 
       <div className="section-container grid-hero" style={{ width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center", paddingTop: 100, paddingBottom: 80, position: "relative", zIndex: 2 }}>
-        <div className="animate-fade-up">
+        <div>
           {/* Badge */}
           <div style={{
+            ...stagger(0),
             display: "inline-flex", alignItems: "center", gap: 8,
             padding: "5px 14px", borderRadius: 20,
             background: "var(--accent-dim)", border: "1px solid rgba(16,185,129,0.2)",
@@ -76,7 +158,7 @@ export default function Hero() {
           </div>
 
           {/* Name + Avatar row */}
-          <div style={{ display: "flex", alignItems: "center", gap: 48, marginBottom: 14 }}>
+          <div style={{ ...stagger(0.15), display: "flex", alignItems: "center", gap: 48, marginBottom: 14 }}>
             <h1 className="hero-heading" style={{ fontSize: 62, fontWeight: 800, color: "var(--white)", lineHeight: 1.08, letterSpacing: "-0.04em" }}>
               Geet<br />Bhute
             </h1>
@@ -93,31 +175,32 @@ export default function Hero() {
             />
           </div>
 
-          <p className="hero-subtitle" style={{ fontSize: 21, fontWeight: 500, color: "var(--accent)", marginBottom: 16, letterSpacing: "-0.01em" }}>
+          <p className="hero-subtitle" style={{ ...stagger(0.3), fontSize: 21, fontWeight: 500, color: "var(--accent)", marginBottom: 16, letterSpacing: "-0.01em" }}>
             Software Developer
           </p>
-          <p style={{ fontSize: 15.5, color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 430, marginBottom: 34 }}>
+          <p style={{ ...stagger(0.4), fontSize: 15.5, color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 430, marginBottom: 34 }}>
             Building resilient, scalable distributed systems with Java, Spring Boot & Cloud Infrastructure.
           </p>
 
-          <div className="hero-buttons" style={{ display: "flex", gap: 12 }}>
-            <a href="#projects" style={{
+          <div className="hero-buttons" style={{ ...stagger(0.5), display: "flex", gap: 12 }}>
+            <MagneticButton href="#projects" className="anim-glow-pulse" style={{
               padding: "13px 28px", borderRadius: 12,
               background: "linear-gradient(135deg, #10b981, #059669)",
               color: "#fff", fontWeight: 600, fontSize: 14,
               boxShadow: "0 8px 30px rgba(16,185,129,0.2)",
-              transition: "all 0.2s",
-            }}>View Projects</a>
-            <a href="#contact" style={{
+            }}>View Projects</MagneticButton>
+            <MagneticButton href="#contact" style={{
               padding: "13px 28px", borderRadius: 12,
               border: "1px solid var(--border)", color: "#d4d4d8",
               fontWeight: 600, fontSize: 14, background: "rgba(255,255,255,0.02)",
-              transition: "all 0.2s",
-            }}>Get in Touch</a>
+            }}>Get in Touch</MagneticButton>
           </div>
         </div>
 
-        <div className="animate-fade-up delay-200 hero-terminal" style={{ display: "flex", justifyContent: "flex-end" }}>
+        <div style={{
+          ...stagger(0.35),
+          display: "flex", justifyContent: "flex-end",
+        }} className="hero-terminal">
           <Terminal />
         </div>
       </div>

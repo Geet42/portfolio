@@ -1,3 +1,5 @@
+import useInView from "../hooks/useInView";
+
 const experience = [
   {
     role: "Software Engineering Intern", company: "Tajshree Autowheels Pvt. Ltd.",
@@ -38,19 +40,50 @@ const experience = [
 ];
 
 export default function Experience() {
+  const [headingRef, headingVisible] = useInView({ threshold: 0.2 });
+  const [timelineRef, timelineVisible] = useInView({ threshold: 0.05 });
+
   return (
     <section id="experience" style={{ padding: "120px 0" }}>
       <div className="section-container">
-        <div style={{ marginBottom: 56 }}>
-          <h2 style={{ fontSize: 40, fontWeight: 800, color: "var(--white)", letterSpacing: "-0.03em", marginBottom: 10 }}>Experience</h2>
-          <p style={{ fontSize: 15, color: "var(--text-muted)" }}>Internships where I shipped real systems.</p>
+        <div ref={headingRef} style={{ marginBottom: 56 }}>
+          <h2
+            className={headingVisible ? "anim-blur-in" : "anim-hidden"}
+            style={{ fontSize: 40, fontWeight: 800, color: "var(--white)", letterSpacing: "-0.03em", marginBottom: 10 }}
+          >Experience</h2>
+          <p
+            className={headingVisible ? "anim-fade-up" : "anim-hidden"}
+            style={{ fontSize: 15, color: "var(--text-muted)", animationDelay: "0.15s" }}
+          >Internships where I shipped real systems.</p>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 36 }}>
+        <div ref={timelineRef} style={{ display: "flex", flexDirection: "column", gap: 36 }}>
           {experience.map((exp, i) => (
-            <div key={i} style={{ position: "relative", paddingLeft: 36 }}>
-              <div style={{ position: "absolute", left: 0, top: 8, width: 14, height: 14, borderRadius: "50%", background: exp.color, border: "3px solid var(--bg)" }} />
-              {i < experience.length - 1 && <div style={{ position: "absolute", left: 6, top: 24, bottom: -36, width: 2, background: "var(--border)" }} />}
+            <div
+              key={i}
+              className={timelineVisible ? (i % 2 === 0 ? "anim-slide-left" : "anim-slide-right") : "anim-hidden"}
+              style={{ position: "relative", paddingLeft: 36, animationDelay: `${i * 0.15}s` }}
+            >
+              {/* Timeline dot */}
+              <div
+                className={`timeline-dot ${timelineVisible ? "animate" : ""}`}
+                style={{
+                  position: "absolute", left: 0, top: 8, width: 14, height: 14,
+                  borderRadius: "50%", background: exp.color, border: "3px solid var(--bg)",
+                  animationDelay: `${i * 0.15}s`,
+                }}
+              />
+              {/* Timeline line */}
+              {i < experience.length - 1 && (
+                <div
+                  className={`timeline-line ${timelineVisible ? "animate" : ""}`}
+                  style={{
+                    position: "absolute", left: 6, top: 24, bottom: -36, width: 2,
+                    background: "var(--border)",
+                    animationDelay: `${i * 0.15 + 0.2}s`,
+                  }}
+                />
+              )}
 
               <div className="card" style={{ padding: 28 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
@@ -65,7 +98,14 @@ export default function Experience() {
                 </div>
                 <ul style={{ display: "flex", flexDirection: "column", gap: 12, padding: 0, listStyle: "none" }}>
                   {exp.bullets.map((b, j) => (
-                    <li key={j} style={{ fontSize: 14, color: "var(--text)", lineHeight: 1.75, paddingLeft: 18, position: "relative" }}>
+                    <li
+                      key={j}
+                      className={timelineVisible ? "anim-fade-up" : "anim-hidden"}
+                      style={{
+                        fontSize: 14, color: "var(--text)", lineHeight: 1.75, paddingLeft: 18, position: "relative",
+                        animationDelay: `${(i * 0.15) + 0.3 + (j * 0.08)}s`,
+                      }}
+                    >
                       <span style={{ position: "absolute", left: 0, top: 9, width: 5, height: 5, borderRadius: "50%", background: exp.color, opacity: 0.5 }} />
                       {b}
                     </li>

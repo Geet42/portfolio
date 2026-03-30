@@ -1,3 +1,6 @@
+import { useState, useEffect, useRef } from "react";
+import useInView from "../hooks/useInView";
+
 const education = [
   {
     school: "University College Dublin", degree: "MSc Computer Science (Negotiated Learning)", grade: "2:1", period: "Sep 2025 – Present",
@@ -23,7 +26,7 @@ const certifications = [
 ];
 
 const leetcode = {
-  solved: 150+,
+  solved: 150,
   easy: 77,
   medium: 64,
   hard: 10,
@@ -31,32 +34,120 @@ const leetcode = {
   url: "https://leetcode.com/u/bhutegp/",
 };
 
+/* Animated counter hook */
+function useCounter(target, isActive, duration = 1500) {
+  const [count, setCount] = useState(0);
+  const hasRun = useRef(false);
+
+  useEffect(() => {
+    if (!isActive || hasRun.current) return;
+    hasRun.current = true;
+
+    const startTime = performance.now();
+    const step = (now) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.round(eased * target));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [isActive, target, duration]);
+
+  return count;
+}
+
+function LeetCodeCard({ isVisible, animClass = "" }) {
+  const solved = useCounter(leetcode.solved, isVisible);
+  const easy = useCounter(leetcode.easy, isVisible);
+  const medium = useCounter(leetcode.medium, isVisible);
+  const hard = useCounter(leetcode.hard, isVisible);
+
+  return (
+    <a href={leetcode.url} target="_blank" rel="noreferrer" className={`card ${animClass}`} style={{ padding: 20, transition: "all 0.3s", cursor: "pointer", animationDelay: "0.3s", display: "block" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontSize: 20 }}>🏆</span>
+          <span style={{ color: "var(--white)", fontWeight: 700, fontSize: 14 }}>LeetCode</span>
+        </div>
+        <span style={{ fontSize: 11, color: "var(--accent)", fontFamily: "var(--mono)" }}>@bhutegp ↗</span>
+      </div>
+      <div style={{ display: "flex", gap: 12, marginBottom: 10 }}>
+        <div style={{ flex: 1, textAlign: "center", padding: "10px 0", borderRadius: 10, background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.12)" }}>
+          <span style={{ fontSize: 22, fontWeight: 800, color: "var(--white)", display: "block", fontFamily: "var(--mono)" }}>{solved}+</span>
+          <span style={{ fontSize: 10, color: "var(--text-muted)", fontWeight: 500 }}>Solved</span>
+        </div>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4, justifyContent: "center" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11 }}>
+            <span style={{ color: "#22c55e", fontWeight: 600 }}>Easy</span>
+            <span style={{ color: "var(--text-muted)", fontFamily: "var(--mono)" }}>{easy}</span>
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11 }}>
+            <span style={{ color: "#f59e0b", fontWeight: 600 }}>Medium</span>
+            <span style={{ color: "var(--text-muted)", fontFamily: "var(--mono)" }}>{medium}</span>
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11 }}>
+            <span style={{ color: "#ef4444", fontWeight: 600 }}>Hard</span>
+            <span style={{ color: "var(--text-muted)", fontFamily: "var(--mono)" }}>{hard}</span>
+          </div>
+        </div>
+      </div>
+      <div style={{ fontSize: 11, color: "var(--text-muted)", textAlign: "center" }}>
+        {leetcode.submissions} submissions · 50 Days Badge · Java primary
+      </div>
+    </a>
+  );
+}
+
 export default function About() {
+  const [headingRef, headingVisible] = useInView({ threshold: 0.2 });
+  const [bioRef, bioVisible] = useInView({ threshold: 0.15 });
+  const [eduRef, eduVisible] = useInView({ threshold: 0.1 });
+  const [certRef, certVisible] = useInView({ threshold: 0.1 });
+  const [beyondRef, beyondVisible] = useInView({ threshold: 0.1 });
+
   return (
     <section id="about" style={{ padding: "120px 0" }}>
       <div className="section-container">
-        <div style={{ marginBottom: 56 }}>
-          <h2 className="section-heading" style={{ fontSize: 40, fontWeight: 800, color: "var(--white)", letterSpacing: "-0.03em", marginBottom: 10 }}>About Me</h2>
-          <p style={{ fontSize: 15, color: "var(--text-muted)" }}>Software engineer with a systems-first mindset.</p>
+        <div ref={headingRef} style={{ marginBottom: 56 }}>
+          <h2
+            className={`section-heading ${headingVisible ? "anim-blur-in" : "anim-hidden"}`}
+            style={{ fontSize: 40, fontWeight: 800, color: "var(--white)", letterSpacing: "-0.03em", marginBottom: 10 }}
+          >About Me</h2>
+          <p
+            className={headingVisible ? "anim-fade-up" : "anim-hidden"}
+            style={{ fontSize: 15, color: "var(--text-muted)", animationDelay: "0.15s" }}
+          >Software engineer with a systems-first mindset.</p>
         </div>
 
         {/* Bio + Education */}
         <div className="grid-about" style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 48, alignItems: "start", marginBottom: 56 }}>
-          <div>
-            <p style={{ fontSize: 15, color: "var(--text)", lineHeight: 1.8, marginBottom: 20 }}>
+          <div ref={bioRef}>
+            <p
+              className={bioVisible ? "anim-slide-left" : "anim-hidden"}
+              style={{ fontSize: 15, color: "var(--text)", lineHeight: 1.8, marginBottom: 20 }}
+            >
               I'm a Computer Science master's student at University College Dublin with a deep interest in building fault-tolerant,
               secure backend systems. My work spans Spring Boot microservices, Docker/Kubernetes infrastructure, and real-time
               ML inference APIs — always with a focus on reliability, clean architecture, and measurable performance gains.
             </p>
-            <p style={{ fontSize: 15, color: "var(--text)", lineHeight: 1.8 }}>
+            <p
+              className={bioVisible ? "anim-slide-left" : "anim-hidden"}
+              style={{ fontSize: 15, color: "var(--text)", lineHeight: 1.8, animationDelay: "0.15s" }}
+            >
               From digitizing dealership booking workflows to publishing ML research, I bring production-grade discipline to
               every codebase I touch. I'm driven by the challenge of making complex systems simple, observable, and resilient.
             </p>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <div ref={eduRef} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             {education.map((e, i) => (
-              <div key={i} className="card" style={{ padding: 20 }}>
+              <div
+                key={i}
+                className={`card ${eduVisible ? "anim-slide-right" : "anim-hidden"}`}
+                style={{ padding: 20, animationDelay: `${i * 0.15}s` }}
+              >
                 <div style={{ display: "flex", gap: 14, marginBottom: e.modules ? 12 : 0 }}>
                   <span style={{ fontSize: 22 }}>🎓</span>
                   <div>
@@ -67,12 +158,17 @@ export default function About() {
                 </div>
                 {e.modules && (
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 4, paddingLeft: 36 }}>
-                    {e.modules.map(m => (
-                      <span key={m} style={{
-                        fontSize: 9.5, fontWeight: 500, padding: "2px 8px", borderRadius: 5,
-                        background: "rgba(255,255,255,0.04)", border: "1px solid var(--border)",
-                        color: "var(--text-muted)",
-                      }}>{m}</span>
+                    {e.modules.map((m, mi) => (
+                      <span
+                        key={m}
+                        className={eduVisible ? "anim-fade-up" : "anim-hidden"}
+                        style={{
+                          fontSize: 9.5, fontWeight: 500, padding: "2px 8px", borderRadius: 5,
+                          background: "rgba(255,255,255,0.04)", border: "1px solid var(--border)",
+                          color: "var(--text-muted)",
+                          animationDelay: `${(i * 0.15) + 0.3 + (mi * 0.03)}s`,
+                        }}
+                      >{m}</span>
                     ))}
                   </div>
                 )}
@@ -80,47 +176,23 @@ export default function About() {
             ))}
 
             {/* LeetCode Card */}
-            <a href={leetcode.url} target="_blank" rel="noreferrer" className="card" style={{ padding: 20, transition: "all 0.3s", cursor: "pointer" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <span style={{ fontSize: 20 }}>🏆</span>
-                  <span style={{ color: "var(--white)", fontWeight: 700, fontSize: 14 }}>LeetCode</span>
-                </div>
-                <span style={{ fontSize: 11, color: "var(--accent)", fontFamily: "var(--mono)" }}>@bhutegp ↗</span>
-              </div>
-              <div style={{ display: "flex", gap: 12, marginBottom: 10 }}>
-                <div style={{ flex: 1, textAlign: "center", padding: "10px 0", borderRadius: 10, background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.12)" }}>
-                  <span style={{ fontSize: 22, fontWeight: 800, color: "var(--white)", display: "block" }}>{leetcode.solved}</span>
-                  <span style={{ fontSize: 10, color: "var(--text-muted)", fontWeight: 500 }}>Solved</span>
-                </div>
-                <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4, justifyContent: "center" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11 }}>
-                    <span style={{ color: "#22c55e", fontWeight: 600 }}>Easy</span>
-                    <span style={{ color: "var(--text-muted)" }}>{leetcode.easy}</span>
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11 }}>
-                    <span style={{ color: "#f59e0b", fontWeight: 600 }}>Medium</span>
-                    <span style={{ color: "var(--text-muted)" }}>{leetcode.medium}</span>
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11 }}>
-                    <span style={{ color: "#ef4444", fontWeight: 600 }}>Hard</span>
-                    <span style={{ color: "var(--text-muted)" }}>{leetcode.hard}</span>
-                  </div>
-                </div>
-              </div>
-              <div style={{ fontSize: 11, color: "var(--text-muted)", textAlign: "center" }}>
-                {leetcode.submissions} submissions · 50 Days Badge · Java primary
-              </div>
-            </a>
+            <LeetCodeCard isVisible={eduVisible} animClass={eduVisible ? "anim-slide-right" : "anim-hidden"} />
           </div>
         </div>
 
         {/* Certifications */}
-        <div style={{ marginBottom: 56 }}>
-          <h3 style={{ fontSize: 20, fontWeight: 700, color: "var(--white)", marginBottom: 20 }}>Certifications</h3>
+        <div ref={certRef} style={{ marginBottom: 56 }}>
+          <h3
+            className={certVisible ? "anim-blur-in" : "anim-hidden"}
+            style={{ fontSize: 20, fontWeight: 700, color: "var(--white)", marginBottom: 20 }}
+          >Certifications</h3>
           <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
             {certifications.map((c, i) => (
-              <div key={i} className="card" style={{ padding: "14px 18px", display: "flex", alignItems: "center", gap: 12 }}>
+              <div
+                key={i}
+                className={`card ${certVisible ? "anim-scale-in" : "anim-hidden"}`}
+                style={{ padding: "14px 18px", display: "flex", alignItems: "center", gap: 12, animationDelay: `${0.1 + i * 0.06}s` }}
+              >
                 <span style={{ width: 8, height: 8, borderRadius: "50%", background: c.color, flexShrink: 0 }} />
                 <div>
                   <p style={{ fontSize: 12.5, color: "var(--white)", fontWeight: 600, lineHeight: 1.3 }}>{c.name}</p>
@@ -132,30 +204,27 @@ export default function About() {
         </div>
 
         {/* Beyond Academics */}
-        <div>
-          <h3 style={{ fontSize: 20, fontWeight: 700, color: "var(--white)", marginBottom: 20 }}>Beyond Academics</h3>
+        <div ref={beyondRef}>
+          <h3
+            className={beyondVisible ? "anim-blur-in" : "anim-hidden"}
+            style={{ fontSize: 20, fontWeight: 700, color: "var(--white)", marginBottom: 20 }}
+          >Beyond Academics</h3>
           <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
-            <div className="card" style={{ padding: 24 }}>
-              <span style={{ fontSize: 28, display: "block", marginBottom: 12 }}>🏏</span>
-              <h4 style={{ color: "var(--white)", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Cricket</h4>
-              <p style={{ fontSize: 12.5, color: "var(--text)", lineHeight: 1.7 }}>
-                Represented school and college in intercollegiate tournaments. Secured runner-up positions at Dhanwate National College and Sindhu Mahavidyalaya competitions.
-              </p>
-            </div>
-            <div className="card" style={{ padding: 24 }}>
-              <span style={{ fontSize: 28, display: "block", marginBottom: 12 }}>🤝</span>
-              <h4 style={{ color: "var(--white)", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Rotaract Club – RCOEM</h4>
-              <p style={{ fontSize: 12.5, color: "var(--text)", lineHeight: 1.7 }}>
-                Distributed essentials to underprivileged families, organized awareness campaigns, and hosted events for differently-abled children through social initiatives.
-              </p>
-            </div>
-            <div className="card" style={{ padding: 24 }}>
-              <span style={{ fontSize: 28, display: "block", marginBottom: 12 }}>💻</span>
-              <h4 style={{ color: "var(--white)", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Competitive Programming</h4>
-              <p style={{ fontSize: 12.5, color: "var(--text)", lineHeight: 1.7 }}>
-                132 LeetCode problems solved (Java). Active competitive programmer focused on data structures, algorithms, and problem-solving under constraints.
-              </p>
-            </div>
+            {[
+              { emoji: "🏏", title: "Cricket", text: "Represented school and college in intercollegiate tournaments. Secured runner-up positions at Dhanwate National College and Sindhu Mahavidyalaya competitions." },
+              { emoji: "🤝", title: "Rotaract Club – RCOEM", text: "Distributed essentials to underprivileged families, organized awareness campaigns, and hosted events for differently-abled children through social initiatives." },
+              { emoji: "💻", title: "Competitive Programming", text: "132 LeetCode problems solved (Java). Active competitive programmer focused on data structures, algorithms, and problem-solving under constraints." },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className={`card ${beyondVisible ? "anim-scale-in" : "anim-hidden"}`}
+                style={{ padding: 24, animationDelay: `${0.1 + i * 0.1}s` }}
+              >
+                <span style={{ fontSize: 28, display: "block", marginBottom: 12 }}>{item.emoji}</span>
+                <h4 style={{ color: "var(--white)", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>{item.title}</h4>
+                <p style={{ fontSize: 12.5, color: "var(--text)", lineHeight: 1.7 }}>{item.text}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
